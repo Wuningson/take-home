@@ -1,34 +1,32 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { FirebaseClientService } from '../firebase/firebase-client.service';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
-import { CreateUserDto } from './dtos/create-user.dto';
+import { UserLoginDto } from './dtos/user-login.dto';
 
 @Injectable()
-export class UsersService {
+export class AuthService {
   constructor(
     private firebaseClientService: FirebaseClientService,
     private firebaseAdminService: FirebaseAdminService,
   ) {}
 
-  async createUser(dto: CreateUserDto) {
+  async userLogin(dto: UserLoginDto) {
     const { email, password } = dto;
     const check = await this.firebaseAdminService.checkIfEmailExists(email);
-    if (check) {
-      throw new BadRequestException('account with this email exists already');
+    if (!check) {
+      throw new BadRequestException('account with this email does not exist');
     }
 
-    const token = await this.firebaseClientService.createUser(email, password);
+    const token = await this.firebaseClientService.login(email, password);
     if (token === false) {
-      throw new BadRequestException(
-        'could not create user account at this time',
-      );
+      throw new BadRequestException('incorrrect login details');
     }
 
     return {
       data: {
         token,
       },
-      message: 'user account created successfully',
+      message: 'authentication successful',
     };
   }
 }
