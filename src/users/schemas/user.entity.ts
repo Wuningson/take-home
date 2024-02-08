@@ -22,6 +22,9 @@ export class User {
   @Column({ length: 10, enum: Role, default: Role.USER, type: 'varchar' })
   role: Role;
 
+  @Column({ type: 'bytea', nullable: true })
+  image: Buffer;
+
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 

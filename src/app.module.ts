@@ -9,6 +9,7 @@ import { FirebaseModule } from './firebase/firebase.module';
 import { User } from './users/schemas/user.entity';
 import { CompaniesModule } from './companies/companies.module';
 import { Company } from './companies/schemas/company.entity';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -23,6 +24,13 @@ import { Company } from './companies/schemas/company.entity';
         entities: [User, Company],
         synchronize: true,
       }),
+    }),
+    MulterModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        dest: configService.get<string>('MULTER_DEST'),
+      }),
+      inject: [ConfigService],
     }),
     UsersModule,
     AuthModule,

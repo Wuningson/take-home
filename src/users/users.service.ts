@@ -33,7 +33,7 @@ export class UsersService {
       );
     }
 
-    const user = this.userRepository.create({ email });
+    const user = this.userRepository.create({ email, role: Role.ADMIN });
     await this.userRepository.save(user);
 
     return {
@@ -41,6 +41,20 @@ export class UsersService {
         token,
       },
       message: 'user account created successfully',
+    };
+  }
+
+  async uploadUserImage(id: number, file: Express.Multer.File) {
+    const user = await this.userRepository.findOneBy({ id: id });
+    if (!user) {
+      throw new BadRequestException('user not found');
+    }
+
+    user.image = file.buffer;
+    await this.userRepository.save(user);
+
+    return {
+      message: 'user image uploaded successfully',
     };
   }
 }
