@@ -3,10 +3,11 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/schemas/user.entity';
+import { FirebaseAuthStrategy } from './strategy/firebase-strategy.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, FirebaseAuthStrategy],
 })
 export class AuthModule {}

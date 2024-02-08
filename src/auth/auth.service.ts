@@ -5,6 +5,7 @@ import { UserLoginDto } from './dtos/user-login.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/schemas/user.entity';
 import { Repository } from 'typeorm';
+import { StrategyUser } from './strategy/firebase-strategy.guard';
 
 @Injectable()
 export class AuthService {
@@ -36,6 +37,13 @@ export class AuthService {
         token,
       },
       message: 'authentication successful',
+    };
+  }
+
+  async getUser(user: StrategyUser) {
+    return {
+      data: user,
+      message: 'user fetched successfully',
     };
   }
 }

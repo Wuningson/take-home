@@ -34,4 +34,14 @@ export class FirebaseAdminService {
       return false;
     }
   }
+
+  async verifyToken(token: string) {
+    try {
+      const check = await this.app.auth().verifyIdToken(token, true);
+      return check;
+    } catch (err) {
+      this.logger.error(err);
+      return false;
+    }
+  }
 }
