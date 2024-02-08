@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FirebaseModule } from './firebase/firebase.module';
+import { User } from './users/schemas/user.entity';
 
 @Module({
   imports: [
@@ -17,6 +18,8 @@ import { FirebaseModule } from './firebase/firebase.module';
       useFactory: async (config: ConfigService) => ({
         type: 'postgres',
         url: config.getOrThrow('DATABASE_URL'),
+        entities: [User],
+        synchronize: true,
       }),
     }),
     UsersModule,
