@@ -14,7 +14,8 @@ export class FirebaseAdminService {
       privateKey:
         config.getOrThrow('ENV') !== 'PROD'
           ? config.getOrThrow('FIREBASE_PRIVATE_KEY').replace(/\\n/g, '\n')
-          : require('/etc/secrets/private_key'),
+          : // eslint-disable-next-line @typescript-eslint/no-var-requires
+            String(require('/etc/secrets/private_key')),
       clientEmail: config.getOrThrow('FIREBASE_CLIENT_EMAIL'),
       clientId: config.getOrThrow('FIREBASE_CLIENT_ID'),
       authuri: config.getOrThrow('FIREBASE_AUTH_URI'),
