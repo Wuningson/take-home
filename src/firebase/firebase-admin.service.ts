@@ -11,7 +11,9 @@ export class FirebaseAdminService {
       type: config.getOrThrow('FIREBASE_ACCOUNT_TYPE'),
       projectId: config.getOrThrow('FIREBASE_PROJECT_ID'),
       privatekeyId: config.getOrThrow('FIREBASE_PRIVATE_KEY_ID'),
-      privateKey: config.getOrThrow('FIREBASE_PRIVATE_KEY'),
+      privateKey: config
+        .getOrThrow('FIREBASE_PRIVATE_KEY')
+        .replace(/\\n/g, '\n'),
       clientEmail: config.getOrThrow('FIREBASE_CLIENT_EMAIL'),
       clientId: config.getOrThrow('FIREBASE_CLIENT_ID'),
       authuri: config.getOrThrow('FIREBASE_AUTH_URI'),

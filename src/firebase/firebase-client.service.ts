@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { Injectable, Logger, Scope } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import {
   getAuth,
@@ -14,14 +15,14 @@ export class FirebaseClientService {
   private readonly logger = new Logger(FirebaseClientService.name);
   private app: FirebaseApp;
 
-  constructor() {
+  constructor(config: ConfigService) {
     const firebaseConfig = {
-      apiKey: 'AIzaSyD4vwi-DiRBex1M0hYouREB07CA8PBReqs',
+      apiKey: config.getOrThrow('FIREBASE_CLIENT_API_KEY'),
       authDomain: 'take-home-fd756.firebaseapp.com',
       projectId: 'take-home-fd756',
       storageBucket: 'take-home-fd756.appspot.com',
-      messagingSenderId: '642626517482',
-      appId: '1:642626517482:web:cf8cc4663f20cb97f1da93',
+      messagingSenderId: config.getOrThrow('FIREBASE_CLIENT_MESSAGING_ID'),
+      appId: config.getOrThrow('FIREBASE_CLIENT_APP_ID'),
     };
 
     this.app = initializeApp(firebaseConfig, 'client');
