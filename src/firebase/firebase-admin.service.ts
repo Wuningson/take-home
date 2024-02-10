@@ -22,11 +22,6 @@ export class FirebaseAdminService {
       clientc509certUrl: config.getOrThrow('FIREBASE_CLIENT_CERT_URL'),
     };
 
-    console.log(
-      'this is private key',
-      config.getOrThrow('FIREBASE_PRIVATE_KEY'),
-    );
-
     this.app = firebase.initializeApp({
       credential: firebase.credential.cert(credential),
     });
