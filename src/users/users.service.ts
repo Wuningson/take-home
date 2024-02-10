@@ -45,7 +45,7 @@ export class UsersService {
   }
 
   async uploadUserImage(id: number, file: Express.Multer.File) {
-    const user = await this.userRepository.findOneBy({ id: id });
+    const user = await this.userRepository.findOne({ where: { id: id } });
     if (!user) {
       throw new BadRequestException('user not found');
     }

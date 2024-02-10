@@ -23,7 +23,7 @@ export class User {
   role: Role;
 
   @Column({ type: 'bytea', nullable: true })
-  image: Buffer;
+  image?: Buffer;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
