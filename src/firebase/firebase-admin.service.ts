@@ -11,11 +11,7 @@ export class FirebaseAdminService {
       type: config.getOrThrow('FIREBASE_ACCOUNT_TYPE'),
       projectId: config.getOrThrow('FIREBASE_PROJECT_ID'),
       privatekeyId: config.getOrThrow('FIREBASE_PRIVATE_KEY_ID'),
-      privateKey:
-        config.getOrThrow('ENV') !== 'PROD'
-          ? config.getOrThrow('FIREBASE_PRIVATE_KEY').replace(/\\n/g, '\n')
-          : // eslint-disable-next-line @typescript-eslint/no-var-requires
-            String(require('/etc/secrets/private_key')),
+      privateKey: config.getOrThrow('FIREBASE_PRIVATE_KEY'),
       clientEmail: config.getOrThrow('FIREBASE_CLIENT_EMAIL'),
       clientId: config.getOrThrow('FIREBASE_CLIENT_ID'),
       authuri: config.getOrThrow('FIREBASE_AUTH_URI'),
@@ -23,6 +19,11 @@ export class FirebaseAdminService {
       authProviderX509CertUrl: config.getOrThrow('FIREBASE_AUTH_CERT_URL'),
       clientc509certUrl: config.getOrThrow('FIREBASE_CLIENT_CERT_URL'),
     };
+
+    console.log(
+      'this is private key',
+      config.getOrThrow('FIREBASE_PRIVATE_KEY'),
+    );
 
     this.app = firebase.initializeApp({
       credential: firebase.credential.cert(credential),
