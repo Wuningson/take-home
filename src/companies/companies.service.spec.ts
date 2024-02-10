@@ -7,7 +7,11 @@ import { CreateCompanyDto } from './dtos/create-company.dto';
 import { StrategyUser } from '../auth/strategy/firebase-strategy.guard';
 import { Role, User } from '../users/schemas/user.entity';
 import { FetchCompaniesDto } from './dtos/fetch-companies.dto';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 describe('CompaniesService', () => {
   let service: CompaniesService;
@@ -48,20 +52,20 @@ describe('CompaniesService', () => {
   });
 
   describe('createCompany', () => {
-    it('should create a new company successfully', async () => {
-      const dto: CreateCompanyDto = {
-        name: 'Test Company',
-        products: 10,
-        users: 5,
-      };
+    const dto: CreateCompanyDto = {
+      name: 'Test Company',
+      products: 10,
+      users: 5,
+    };
+    const user: StrategyUser = {
+      email: 'test@example.com',
+      role: Role.USER,
+    };
 
-      const user: StrategyUser = {
-        email: 'test@example.com',
-        role: Role.ADMIN,
-      };
-
+    it('should create a new company successfully for a user', async () => {
       const userData = new User();
       userData.id = 1;
+      userData.role = Role.USER;
 
       userRepositoryMock.findOne.mockResolvedValue(userData);
 
@@ -84,21 +88,27 @@ describe('CompaniesService', () => {
     });
 
     it('should throw UnauthorizedException if user is not found', async () => {
-      const dto: CreateCompanyDto = {
-        name: 'Test Company',
-        products: 10,
-        users: 5,
-      };
+      userRepositoryMock.findOne.mockResolvedValue(null);
 
+      await expect(service.createCompany(dto, user)).rejects.toThrow(
+        UnauthorizedException,
+      );
+    });
+
+    it('should throw ForbiddenException if user is not of role USER', async () => {
       const user: StrategyUser = {
         email: 'test@example.com',
         role: Role.ADMIN,
       };
 
-      userRepositoryMock.findOne.mockResolvedValue(null);
+      const userData = new User();
+      userData.id = 1;
+      userData.role = Role.ADMIN;
+
+      userRepositoryMock.findOne.mockResolvedValue(userData);
 
       await expect(service.createCompany(dto, user)).rejects.toThrow(
-        UnauthorizedException,
+        ForbiddenException,
       );
     });
   });

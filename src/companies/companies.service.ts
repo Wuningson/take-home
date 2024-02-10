@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -26,6 +27,10 @@ export class CompaniesService {
     });
     if (!userData) {
       throw new UnauthorizedException('user not found');
+    }
+
+    if (userData.role !== Role.USER) {
+      throw new ForbiddenException('not a user');
     }
 
     const company = this.companyRepository.create({
